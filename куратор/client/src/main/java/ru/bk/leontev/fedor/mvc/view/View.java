@@ -3,12 +3,15 @@ package ru.bk.leontev.fedor.mvc.view;
 import ru.bk.leontev.fedor.mvc.controller.StudentController;
 import ru.bk.leontev.fedor.mvc.model.Group;
 import ru.bk.leontev.fedor.mvc.model.Student;
+import ru.bk.leontev.fedor.mvc.validators.ValidatorGroup;
+import ru.bk.leontev.fedor.mvc.validators.ValidatorStudent;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableModel;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -18,13 +21,13 @@ public class View extends JFrame {
     //отображаемые элементы
     private JPanel studentPanel = new JPanel();
     private JPanel groupPanel = new JPanel();
-    private JPanel groupTablePanel = new JPanel();
     private JButton saveStudent = new JButton("SaveStudent");
     private JButton saveGroup = new JButton("SaveGroup");
     private JButton deleteStudent = new JButton("DeleteStudent");
     private JButton deleteGroup = new JButton("DeleteGroup");
     private JButton clearStudent = new JButton("ClearStudent");
     private JButton clearGroup = new JButton("ClearGroup");
+    //   private JButton addStudent=new JButton("addStudent");
     private StudentView studentView = new StudentView(getStudentPanel());
     private GroupView groupView = new GroupView(getGroupPanel());
 
@@ -49,30 +52,63 @@ public class View extends JFrame {
 
         JPanel panelGroupButton_add_clear = new JPanel();
         JPanel panelStudentButton_add_clear = new JPanel();
-        groupTablePanel.setPreferredSize(new Dimension(250, 400));
-        groupTablePanel.add(getGroupView().scrollPane);
-        groupTablePanel.setBackground(Color.BLACK);
-        GridLayout gl=new GridLayout(5, 2);
-        //gl.;
-        this.setLayout(gl);
-        panelGroupButton_delete.add(deleteGroup);
-        panelStudentButton_delete.add(deleteStudent);
-        panelGroupButton_add_clear.add(saveGroup);
-        panelGroupButton_add_clear.add(clearGroup);
-        panelStudentButton_add_clear.add(saveStudent);
-        panelStudentButton_add_clear.add(clearStudent);
-        this.add(getGroupPanel());
-        this.add(getStudentPanel());
-        this.add(panelGroupButton_add_clear);
-        this.add(panelStudentButton_add_clear);
-        this.add(groupTablePanel);
-        this.add(getStudentView().scrollPane);
-        this.add(panelGroupButton_delete);
-        this.add(panelStudentButton_delete);
+
+        //this.setLayout(new GridLayout(5, 2));
+        this.setLayout(new GridBagLayout());
+        GridBagConstraints c = new GridBagConstraints();
+        panelGroupButton_delete.add(deleteGroup, c);
+        panelStudentButton_delete.add(deleteStudent, c);
+        panelGroupButton_add_clear.add(saveGroup, c);
+        //panelGroupButton_add_clear.add(addStudent);
+        panelGroupButton_add_clear.add(clearGroup, c);
+        panelStudentButton_add_clear.add(saveStudent, c);
+        panelStudentButton_add_clear.add(clearStudent, c);
+        c.gridy = 0;
+        c.gridx = 0;
+        //c.weightx=0.3;
+        c.gridwidth = 1;
+        this.add(getGroupPanel(), c);
+        c.gridy = 0;
+        c.gridx = 1;
+        // c.weightx=0.7;
+        c.gridwidth = 3;
+        this.add(getStudentPanel(), c);
+        c.gridy = 1;
+        c.gridx = 0;
+        c.gridwidth = 1;
+        this.add(panelGroupButton_add_clear, c);
+        c.gridy = 1;
+        c.gridx = 1;
+        c.gridwidth = 3;
+        this.add(panelStudentButton_add_clear, c);
+        c.gridy = 2;
+        c.gridx = 0;
+        c.gridwidth = 1;
+        //c.ipadx=60;
+        this.add(getGroupView().scrollPane, c);
+        c.gridy = 2;
+        c.gridx = 1;
+        c.gridwidth = 3;
+        this.add(getStudentView().scrollPane, c);
+        c.gridy = 3;
+        c.gridx = 0;
+        c.gridwidth = 1;
+        this.add(panelGroupButton_delete, c);
+        c.gridy = 3;
+        c.gridx = 1;
+        c.gridwidth = 3;
+        this.add(panelStudentButton_delete, c);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setSize(1100, 700);
+        this.setSize(930, 650);
         this.setVisible(true);
-        this.setResizable(true);
+        this.setResizable(false);
+        //  this.addStudentListener(new ActionListener() {
+        //     public void actionPerformed(ActionEvent e) {
+        //         JPanel jPanel = new JPanel();
+        //         jPanel.add(saveStudent);
+        //         JOptionPane.showInputDialog(jPanel, "new Student");
+        //      }
+        //   });
     }
 
 
@@ -100,6 +136,10 @@ public class View extends JFrame {
     public void clearGroupListener(ActionListener actionListener) {
         clearGroup.addActionListener(actionListener);
     }
+
+    //  public void addStudentListener(ActionListener actionListener) {
+    //      addStudent.addActionListener(actionListener);
+    //   }
 
 
     //реализация слушателей таблиц
@@ -201,34 +241,39 @@ public class View extends JFrame {
     }
 
     public boolean valideteStudent() {
-        try {
-            Student student = getStudentView().getStudent();
-        } catch (Exception ex) {
+        ValidatorStudent validatorStudent = new ValidatorStudent(getStudentView().getName(), getStudentView().getSurname(), getStudentView().getPatronymic(), getStudentView().getGroup(), getStudentView().getDate());
+        int result = validatorStudent.validate();
+        if (result == 1) {
             JPanel myRootPane = new JPanel();
-            JOptionPane.showMessageDialog(myRootPane, "Incorrect enter", "", JOptionPane.DEFAULT_OPTION);
+            JOptionPane.showMessageDialog(myRootPane, "Empty fields", "Exeption", JOptionPane.DEFAULT_OPTION);
             return false;
         }
-        String s = studentView.getDate();
-        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-        try {
-            formatter.parse(s);
-        } catch (ParseException e) {
+        if (result == 2) {
             JPanel myRootPane = new JPanel();
-            JOptionPane.showMessageDialog(myRootPane, "Incorrect date, please enter date in formate dd/MM/yyyy", "", JOptionPane.DEFAULT_OPTION);
-            //studentView.clear();
+            JOptionPane.showMessageDialog(myRootPane, "Incert Group is not digital", "Exeption", JOptionPane.DEFAULT_OPTION);
+            return false;
+        }
+        if (result == 3) {
+            JPanel myRootPane = new JPanel();
+            JOptionPane.showMessageDialog(myRootPane, "Incorrect date, please enter date in formate dd/MM/yyyy", "Exeption", JOptionPane.DEFAULT_OPTION);
             return false;
         }
         return true;
     }
 
     public boolean valideteGroup() {
-        try {
-            Group group = getGroupView().getGroup();
-        } catch (Exception ex) {
+        ValidatorGroup validatorGroup = new ValidatorGroup(getGroupView().getFacultet(), getGroupView().getNumber());
+        int result = validatorGroup.validate();
+        if (result ==1){
             JPanel myRootPane = new JPanel();
-            JOptionPane.showMessageDialog(myRootPane, "Incorrect enter", "", JOptionPane.DEFAULT_OPTION);
+            JOptionPane.showMessageDialog(myRootPane, "Empty fields", "Exeption", JOptionPane.DEFAULT_OPTION);
             return false;
         }
-        return true;
+        if (result == 2) {
+            JPanel myRootPane = new JPanel();
+            JOptionPane.showMessageDialog(myRootPane, "Incert Number is not digital", "Exeption", JOptionPane.DEFAULT_OPTION);
+            return false;
+        }
+            return true;
     }
 }

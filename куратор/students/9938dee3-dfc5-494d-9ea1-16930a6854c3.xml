@@ -1,0 +1,13 @@
+<rootnode>
+  <ru.bk.leontev.fedor.mvc.model.Student>
+    <id>
+      <mostSigBits>-7405924516917589683</mostSigBits>
+      <leastSigBits>-7016301923675908925</leastSigBits>
+    </id>
+    <name>Sergey</name>
+    <surname>Konovalov</surname>
+    <patronymic>?</patronymic>
+    <group>1</group>
+    <date>1995-05-10 00:00:00.0 GST</date>
+  </ru.bk.leontev.fedor.mvc.model.Student>
+</rootnode>

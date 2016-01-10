@@ -1,0 +1,10 @@
+<rootnode>
+  <ru.bk.leontev.fedor.mvc.model.Group>
+    <id>
+      <mostSigBits>-2170664215232034913</mostSigBits>
+      <leastSigBits>-7722460855031863597</leastSigBits>
+    </id>
+    <number>3</number>
+    <fackultet>Authomation and Information Technology Facultet</fackultet>
+  </ru.bk.leontev.fedor.mvc.model.Group>
+</rootnode>

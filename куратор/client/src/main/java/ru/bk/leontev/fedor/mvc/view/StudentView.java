@@ -2,6 +2,7 @@ package ru.bk.leontev.fedor.mvc.view;
 
 import ru.bk.leontev.fedor.mvc.controller.StudentController;
 import ru.bk.leontev.fedor.mvc.model.Student;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
@@ -34,17 +35,50 @@ public class StudentView {
      * конструктор помещает поля на панель
      */
     public StudentView(JPanel window) {
-        window.setLayout(new FlowLayout());
-        window.add(labelName);
-        window.add(name);
-        window.add(labelSurname);
-        window.add(surname);
-        window.add(labelPatronymic);
-        window.add(patronymic);
-        window.add(labelGroup);
-        window.add(group);
-        window.add(labelBirthday);
-        window.add(date);
+        jTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+        jTable.getColumnModel().getColumn(0).setPreferredWidth(80);
+        jTable.getColumnModel().getColumn(1).setPreferredWidth(80);
+        jTable.getColumnModel().getColumn(2).setPreferredWidth(80);
+        jTable.getColumnModel().getColumn(3).setPreferredWidth(20);
+        jTable.getColumnModel().getColumn(4).setPreferredWidth(70);
+        scrollPane = new JScrollPane(jTable);
+        window.setLayout(new GridBagLayout());
+        GridBagConstraints c = new GridBagConstraints();
+        // c.fill = GridBagConstraints.PAGE_START;
+        // c.weighty = 1.0;   // установить отступ
+        c.anchor = GridBagConstraints.WEST;
+        //c.insets = new Insets(10, 0, 0, 0);  // поставить заглушку
+        c.gridy = 0;
+        c.gridx = 0;
+        //c.ipadx = 15;
+        window.add(labelName, c);
+        c.gridy = 0;
+        c.gridx = 1;
+        window.add(name, c);
+        c.gridy = 1;
+        c.gridx = 0;
+        window.add(labelSurname, c);
+        c.gridy = 1;
+        c.gridx = 1;
+        window.add(surname, c);
+        c.gridy = 2;
+        c.gridx = 0;
+        window.add(labelPatronymic, c);
+        c.gridy = 2;
+        c.gridx = 1;
+        window.add(patronymic, c);
+        c.gridy = 3;
+        c.gridx = 0;
+        window.add(labelGroup, c);
+        c.gridy = 3;
+        c.gridx = 1;
+        window.add(group, c);
+        c.gridy = 4;
+        c.gridx = 0;
+        window.add(labelBirthday, c);
+        c.gridy = 4;
+        c.gridx = 1;
+        window.add(date, c);
     }
 
 
@@ -53,13 +87,19 @@ public class StudentView {
      */
     public void updateTable() {
         jTable.setModel(new DefaultTableModel(StudentController.getStringTable(), colums));
+        jTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+        jTable.getColumnModel().getColumn(0).setPreferredWidth(80);
+        jTable.getColumnModel().getColumn(1).setPreferredWidth(80);
+        jTable.getColumnModel().getColumn(2).setPreferredWidth(80);
+        jTable.getColumnModel().getColumn(3).setPreferredWidth(20);
+        jTable.getColumnModel().getColumn(4).setPreferredWidth(70);
     }
 
     /**
      * возвращает введенный объект
      */
     public Student getStudent() {
-        Student student = new Student(getName(), getSurname(), getPatronymic(), getGroup(), getDate());
+        Student student = new Student(getName(), getSurname(), getPatronymic(), Integer.parseInt(getGroup()), getDate());
         return student;
     }
 
@@ -77,8 +117,8 @@ public class StudentView {
         return patronymic.getText();
     }
 
-    public int getGroup() {
-        return Integer.parseInt(group.getText());
+    public String getGroup() {
+        return group.getText();
     }
 
     public String getDate() {
@@ -106,7 +146,6 @@ public class StudentView {
     public void setDate(String date) {
         this.date.setText(date);
     }
-
 
 
     /**

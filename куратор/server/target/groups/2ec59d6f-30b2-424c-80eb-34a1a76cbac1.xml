@@ -1,0 +1,10 @@
+<rootnode>
+  <ru.bk.leontev.fedor.mvc.model.Group>
+    <id>
+      <mostSigBits>3370272997040603724</mostSigBits>
+      <leastSigBits>-9157167548424471871</leastSigBits>
+    </id>
+    <number>1</number>
+    <fackultet>Chemistry Technology Facultet</fackultet>
+  </ru.bk.leontev.fedor.mvc.model.Group>
+</rootnode>
