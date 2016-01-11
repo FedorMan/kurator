@@ -5,7 +5,6 @@ import ru.bk.leontev.fedor.mvc.model.Group;
 import ru.bk.leontev.fedor.mvc.view.View;
 import ru.bk.leontev.fedor.remoteService.RemoteService;
 
-import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.rmi.NotBoundException;
@@ -23,9 +22,15 @@ public class GroupController {
         this.service=servic;
         this.view = vew;
         view.addTableGroupListener();
-        view.addGroupListener(new ActionListener() {
+        this.view.addNewGroupListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                if(!view.valideteGroup()) return;
+                view.createWindowForAddGroup();
+                view.getGroupView().clear();
+            }
+        });
+        view.addSaveGroupListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if (!view.valideteGroup()) return;
                 if (view.isRefactorGroup()) {
                     for (int i = 0; i < savesGroups.size(); i++) {
                         if (savesGroups.get(i).equals(view.getDedicatedGroup())) {
@@ -53,8 +58,21 @@ public class GroupController {
                     view.getGroupView().clear();
                     view.getGroupView().updateTable();
                 }
+                view.newElement.close();
             }
         });
+
+        this.view.addRefactorGroupListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if (view.isRefactorGroup()) {
+                    view.createWindowForAddGroup();
+                    //view.setRefactorStudent(false);
+                }
+            }
+        });
+
+
+
         this.view.deleteGroupListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 for (int i = 0; i < savesGroups.size(); i++) {
@@ -71,7 +89,7 @@ public class GroupController {
                             e1.printStackTrace();
                         }
                         view.setRefactorGroup(false);
-                        view.getGroupView().clear();
+                        //view.getGroupView().clear();
                         view.getGroupView().updateTable();
                         view.getStudentView().updateTable();
 

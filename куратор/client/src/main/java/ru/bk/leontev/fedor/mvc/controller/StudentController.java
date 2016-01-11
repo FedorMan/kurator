@@ -22,12 +22,21 @@ public class StudentController {
     static LinkedList<Student> savesStudents;
     static RemoteService service;
     static Registry registry;
+
     public StudentController(View vew, RemoteService servic) {
         this.service = servic;
         this.view = vew;
         this.view.addTableStudentListener();
-        this.view.addSaveListener(new ActionListener() {
+        this.view.addNewStudentListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                view.createWindowForAddStudent();
+                view.getStudentView().clear();
+            }
+        });
+        this.view.addSaveStudentListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                // NewElement newElement=new NewElement();
+                //view.newElement.setVisible(true);
                 if (!view.valideteStudent()) return;
                 if (view.isRefactorStudent()) {
                     for (int i = 0; i < savesStudents.size(); i++) {
@@ -42,7 +51,7 @@ public class StudentController {
                             }
 
                             view.getStudentView().clear();
-                            view.getGroupView().clear();
+                            //view.getGroupView().clear();
                             view.getStudentView().updateTable();
                         }
                     }
@@ -59,8 +68,22 @@ public class StudentController {
                     view.getStudentView().updateTable();
                 }
 
+                view.newElement.close();
             }
         });
+
+        this.view.addRefactorStudentListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if (view.isRefactorStudent()) {
+                    view.createWindowForAddStudent();
+                    //view.setRefactorStudent(false);
+                }
+            }
+        });
+
+
+
+
         this.view.deleteStudentListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 for (int i = 0; i < savesStudents.size(); i++) {
@@ -71,7 +94,7 @@ public class StudentController {
                         } catch (RemoteException e1) {
                             e1.printStackTrace();
                         }
-                        view.setRefactorStudent(false);
+                        //view.setRefactorStudent(false);
                         view.getStudentView().clear();
                         view.getStudentView().updateTable();
                     }
@@ -86,8 +109,18 @@ public class StudentController {
             }
         });
 
+        this.view.showAllStudentListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                view.setRefactorGroup(false);
+                view.getGroupView().clear();
+                view.getStudentView().updateTable();
+                view.showAllStudent.setEnabled(false);
+            }
+        });
+
 
     }
+
 
 
     /**

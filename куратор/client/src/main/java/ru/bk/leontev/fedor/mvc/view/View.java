@@ -11,25 +11,26 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableModel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 
 public class View extends JFrame {
 
     //отображаемые элементы
     private JPanel studentPanel = new JPanel();
     private JPanel groupPanel = new JPanel();
-    private JButton saveStudent = new JButton("SaveStudent");
-    private JButton saveGroup = new JButton("SaveGroup");
+    private JButton addStudent = new JButton("AddStudent");
+    public JButton showAllStudent = new JButton("ShowAll");
+    private JButton addGroup = new JButton("AddGroup");
     private JButton deleteStudent = new JButton("DeleteStudent");
     private JButton deleteGroup = new JButton("DeleteGroup");
-    private JButton clearStudent = new JButton("ClearStudent");
-    private JButton clearGroup = new JButton("ClearGroup");
-    //   private JButton addStudent=new JButton("addStudent");
+    private JButton refactoringStudent = new JButton("RefactorStudent");
+    private JButton refactoringGroup = new JButton("RefactorGroup");
     private StudentView studentView = new StudentView(getStudentPanel());
     private GroupView groupView = new GroupView(getGroupPanel());
+    public NewElement newElement;
+
+    private JLabel laberSavesStudents = new JLabel("Table students");
+    private JLabel laberSavesGroups = new JLabel("Table groups");
 
 
     //определ€ют выбран ли какой либо объект из таблиц
@@ -50,51 +51,59 @@ public class View extends JFrame {
         JPanel panelGroupButton_delete = new JPanel();
         JPanel panelStudentButton_delete = new JPanel();
 
-        JPanel panelGroupButton_add_clear = new JPanel();
-        JPanel panelStudentButton_add_clear = new JPanel();
-
         //this.setLayout(new GridLayout(5, 2));
         this.setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
-        panelGroupButton_delete.add(deleteGroup, c);
-        panelStudentButton_delete.add(deleteStudent, c);
-        panelGroupButton_add_clear.add(saveGroup, c);
-        //panelGroupButton_add_clear.add(addStudent);
-        panelGroupButton_add_clear.add(clearGroup, c);
-        panelStudentButton_add_clear.add(saveStudent, c);
-        panelStudentButton_add_clear.add(clearStudent, c);
+
+
+        panelGroupButton_delete.add(addGroup);
+        //panelGroupButton_add_clear.add(NewElement);
+        panelGroupButton_delete.add(refactoringGroup);
+        panelStudentButton_delete.add(addStudent);
+        panelStudentButton_delete.add(refactoringStudent);
+        showAllStudent.setEnabled(false);
+        panelStudentButton_delete.add(showAllStudent);
+        panelStudentButton_delete.add(deleteStudent);
+        panelGroupButton_delete.add(deleteGroup);
         c.gridy = 0;
         c.gridx = 0;
         //c.weightx=0.3;
-        c.gridwidth = 1;
-        this.add(getGroupPanel(), c);
+        //c.gridwidth = 1;
+        // this.add(getGroupPanel(), c);
+        laberSavesGroups.setFont(new Font("Serif", Font.PLAIN, 30));
+        this.add(laberSavesGroups, c);
         c.gridy = 0;
         c.gridx = 1;
         // c.weightx=0.7;
         c.gridwidth = 3;
-        this.add(getStudentPanel(), c);
+        //newElement=new NewElement(getStudentPanel());
+        //this.add(getStudentPanel(), c);
+        laberSavesStudents.setFont(new Font("Serif", Font.PLAIN, 30));
+        this.add(laberSavesStudents, c);
         c.gridy = 1;
         c.gridx = 0;
         c.gridwidth = 1;
-        this.add(panelGroupButton_add_clear, c);
+        //this.add(panelGroupButton_add_clear, c);
+        this.add(getGroupView().scrollPane, c);
         c.gridy = 1;
         c.gridx = 1;
         c.gridwidth = 3;
-        this.add(panelStudentButton_add_clear, c);
+        //this.add(panelStudentButton_add_clear, c);
+        this.add(getStudentView().scrollPane, c);
         c.gridy = 2;
         c.gridx = 0;
         c.gridwidth = 1;
         //c.ipadx=60;
-        this.add(getGroupView().scrollPane, c);
-        c.gridy = 2;
-        c.gridx = 1;
-        c.gridwidth = 3;
-        this.add(getStudentView().scrollPane, c);
-        c.gridy = 3;
-        c.gridx = 0;
-        c.gridwidth = 1;
+        //this.add(getGroupView().scrollPane, c);
+        //c.gridy = 2;
+        //c.gridx = 1;
+        //c.gridwidth = 3;
+        // this.add(getStudentView().scrollPane, c);
+        // c.gridy = 3;
+        // c.gridx = 0;
+        // c.gridwidth = 1;
         this.add(panelGroupButton_delete, c);
-        c.gridy = 3;
+        c.gridy = 2;
         c.gridx = 1;
         c.gridwidth = 3;
         this.add(panelStudentButton_delete, c);
@@ -102,13 +111,38 @@ public class View extends JFrame {
         this.setSize(930, 650);
         this.setVisible(true);
         this.setResizable(false);
-        //  this.addStudentListener(new ActionListener() {
-        //     public void actionPerformed(ActionEvent e) {
-        //         JPanel jPanel = new JPanel();
-        //         jPanel.add(saveStudent);
-        //         JOptionPane.showInputDialog(jPanel, "new Student");
-        //      }
-        //   });
+        this.setLocationRelativeTo(null);
+
+    }
+
+    /**
+     * —оздает окно дл€ добавлени€ нового студента
+     */
+    JButton saveStudent = new JButton("Save");
+    JButton clearStudentFields = new JButton("Clear");
+
+
+    public void createWindowForAddStudent() {
+        JPanel jPanel = new JPanel();
+        JLabel jLabel = new JLabel("New student");
+        jPanel.add(jLabel);
+        jPanel.add(getStudentPanel());
+        jPanel.add(saveStudent);
+        jPanel.add(clearStudentFields);
+        newElement = new NewElement(jPanel, 250, 230);
+    }
+
+    JButton saveGroup = new JButton("Save");
+    JButton clearGroupFields = new JButton("Clear");
+
+    public void createWindowForAddGroup() {
+        JPanel jPanel = new JPanel();
+        JLabel jLabel = new JLabel("New group");
+        jPanel.add(jLabel);
+        jPanel.add(getGroupPanel());
+        jPanel.add(saveGroup);
+        jPanel.add(clearGroupFields);
+        newElement = new NewElement(jPanel, 350, 200);
     }
 
 
@@ -121,25 +155,43 @@ public class View extends JFrame {
         deleteGroup.addActionListener(actionListener);
     }
 
-    public void addSaveListener(ActionListener actionListener) {
+    public void addNewStudentListener(ActionListener actionListener) {
+        addStudent.addActionListener(actionListener);
+    }
+
+    public void addSaveStudentListener(ActionListener actionListener) {
         saveStudent.addActionListener(actionListener);
     }
 
-    public void addGroupListener(ActionListener actionListener) {
+    public void addRefactorStudentListener(ActionListener actionListener) {
+        refactoringStudent.addActionListener(actionListener);
+    }
+
+    public void addRefactorGroupListener(ActionListener actionListener) {
+        refactoringGroup.addActionListener(actionListener);
+    }
+
+
+    public void addNewGroupListener(ActionListener actionListener) {
+        addGroup.addActionListener(actionListener);
+    }
+
+    public void addSaveGroupListener(ActionListener actionListener) {
         saveGroup.addActionListener(actionListener);
     }
 
     public void clearStudentListener(ActionListener actionListener) {
-        clearStudent.addActionListener(actionListener);
+        clearStudentFields.addActionListener(actionListener);
     }
 
     public void clearGroupListener(ActionListener actionListener) {
-        clearGroup.addActionListener(actionListener);
+        clearGroupFields.addActionListener(actionListener);
     }
 
-    //  public void addStudentListener(ActionListener actionListener) {
-    //      addStudent.addActionListener(actionListener);
-    //   }
+    public void showAllStudentListener(ActionListener actionListener) {
+        showAllStudent.addActionListener(actionListener);
+    }
+
 
 
     //реализаци€ слушателей таблиц
@@ -183,6 +235,7 @@ public class View extends JFrame {
                     getDedicatedGroup().setNumber(Integer.parseInt((String) model.getValueAt(selectedRows[0], 0)));
                     setRefactorGroup(true);
                     StudentController.search();
+                    showAllStudent.setEnabled(true);
                     getStudentView().updateTable();
                 }
                 getGroupView().jTable.clearSelection();
@@ -264,7 +317,7 @@ public class View extends JFrame {
     public boolean valideteGroup() {
         ValidatorGroup validatorGroup = new ValidatorGroup(getGroupView().getFacultet(), getGroupView().getNumber());
         int result = validatorGroup.validate();
-        if (result ==1){
+        if (result == 1) {
             JPanel myRootPane = new JPanel();
             JOptionPane.showMessageDialog(myRootPane, "Empty fields", "Exeption", JOptionPane.DEFAULT_OPTION);
             return false;
@@ -274,6 +327,6 @@ public class View extends JFrame {
             JOptionPane.showMessageDialog(myRootPane, "Incert Number is not digital", "Exeption", JOptionPane.DEFAULT_OPTION);
             return false;
         }
-            return true;
+        return true;
     }
 }
